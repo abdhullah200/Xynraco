@@ -10,7 +10,7 @@ export default async function DashboardLayout({
 }) {
   const playgroundData = await getAllPlaygroundForUser()
 
-  // Store icon names (strings) instead of the components themselves
+  // Store icon names instead of the components themselves
   const technologyIconMap: Record<string, string> = {
     REACT: "Zap",
     NEXTJS: "Lightbulb",
@@ -18,15 +18,17 @@ export default async function DashboardLayout({
     VUE: "Compass",
     HONO: "FlameIcon",
     ANGULAR: "Terminal",
+    FLASK: "Cloud",
+    DOTNET: "Server",
   }
 
   const formattedPlaygroundData =
-    playgroundData?.map((item) => ({
-      id: item.id,
-      name: item.title,
-      starred: item.Starmark?.[0]?.isMarked || false,
-      icon: item.template ? technologyIconMap[item.template] ?? "Code2" : "Code2", 
-    })) || []
+    playgroundData?.map((playground) => ({
+      id: playground.id,
+      name: playground.title,
+      starred: playground.Starmark?.[0]?.isMarked || false,
+      icon: playground.template ? technologyIconMap[playground.template] || "Code2" : "Code2",
+    })) || [];
 
   return (
     <SidebarProvider>
