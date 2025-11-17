@@ -1,12 +1,19 @@
 "use client";
+import TemplateSelectionModal from "@/components/modal/template-selector-modal";
 import { Button } from "@/components/ui/button"
 import { Plus } from 'lucide-react'
 import Image from "next/image"
 import { useRouter } from "next/navigation";
-import { useState } from "react"
+import { use, useState } from "react";
+
 
 const AddNewButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<{
+    title: string;
+    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+    description?: string;
+  } | null>(null)
   const router = useRouter()
 
 
@@ -48,7 +55,11 @@ const AddNewButton = () => {
           />
         </div>
       </div>
-      
+      <TemplateSelectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => {}}
+      />
     </>
   )
 }
