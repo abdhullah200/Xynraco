@@ -6,6 +6,21 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// Component for visually hidden content that remains accessible to screen readers
+function VisuallyHidden({ 
+  children, 
+  ...props 
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      className="absolute w-px h-px p-0 m-[-1px] overflow-hidden whitespace-nowrap border-0"
+      {...props}
+    >
+      {children}
+    </span>
+  )
+}
+
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
@@ -50,12 +65,26 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  title,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
+  title?: string
 }) {
+  // Check if children already contains a DialogTitle by searching for the primitive component
+  const hasDialogTitle = React.Children.toArray(children).some(child => {
+    if (!React.isValidElement(child)) return false
+    
+    // Check if it's directly a DialogTitle component
+    if (child.type === DialogPrimitive.Title) return true
+    
+    // Check if it has the data-slot attribute (for wrapped components)
+    const props = child.props as Record<string, unknown>
+    return props?.['data-slot'] === 'dialog-title'
+  })
+
   return (
-    <DialogPortal data-slot="dialog-portal">
+    <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
@@ -65,6 +94,14 @@ function DialogContent({
         )}
         {...props}
       >
+        {/* Ensure DialogTitle is always present for accessibility */}
+        {!hasDialogTitle && (
+          <VisuallyHidden>
+            <DialogPrimitive.Title data-slot="dialog-title">
+              {title || "Dialog"}
+            </DialogPrimitive.Title>
+          </VisuallyHidden>
+        )}
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close
@@ -140,4 +177,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  VisuallyHidden,
 }
