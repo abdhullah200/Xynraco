@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  PREMIUM_USER
+}
+
+model User {
+  id       String    @id @default(cuid()) @map("_id")
+  name     String?
+  email    String    @unique
+  image    String?
+  accounts Account[]
+  role     UserRole  @default(USER)
+
+  myPlayground StarMark[]
+
+  // chatMessages ChatMessage[] // to be added later
+
+  staredPlayground Playground[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid()) @map("_id")
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
+  scope             String?
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+enum Templates {
+  REACT
+  NEXTJS
+  EXPRESS
+  VUE
+  HONO
+  ANGULAR
+}
+
+model Playground {
+  id            String         @id @default(cuid()) @map("_id")
+  title         String
+  description   String?
+  template      Templates      @default(REACT)
+  //templateFiles TemplateFile[] to be added later
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  Starmark      StarMark[]
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StarMark {
+  id           String     @id @default(cuid()) @map("_id")
+  userId       String
+  playgroundId String
+  isMarked     Boolean
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playgroundId])
+}
