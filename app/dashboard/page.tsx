@@ -5,8 +5,7 @@ import EmptyState from "@/components/ui/empty-state";
 import React from "react";
 import { get } from "http";
 import { getAllPlaygroundForUser } from "@/features/dashboard/action";
-import { deleteProjectById, editProjectById, duplicateProjectById } from "@/features/playground/actions";
-import ProjectTable from "@/features/dashboard/components/project-table";
+import ClientProjectTable from "@/features/dashboard/components/client-project-table";
 
 const DashboardMainPage = async () => {
   const playgrounds = await getAllPlaygroundForUser();
@@ -21,12 +20,9 @@ const DashboardMainPage = async () => {
           
           <EmptyState title="No projects found" description="Create a new project to get started!" imageSrc='/empty-state.svg'/>
         ) : (
-          <ProjectTable
+          <ClientProjectTable
           //@ts-ignore
             projects={playgrounds||[]}
-            onDeleteProject={deleteProjectById}
-            onUpdateProject={editProjectById}
-            onDuplicateProject={duplicateProjectById}
         />
         )
 }

@@ -33,7 +33,7 @@ type TemplateSelectionModalProps = {
   onClose: () => void;
   onSubmit: (data: {
     title: string;
-    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"| "FLASK" | "DOTNET";
+    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR" | "FLASK" | "DOTNET";
     description?: string;
   }) => void;
 };
@@ -134,7 +134,7 @@ const templates: TemplateOption[] = [
     category: "fullstack",
   },
   {
-    id: "Flask",
+    id: "flask",
     name: "Flask",
     description:
         "A lightweight WSGI web application framework in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.",
@@ -200,7 +200,7 @@ const TemplateSelectionModal = ({
     if (selectedTemplate) {
       const templateMap: Record<
         string,
-        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"
+        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR" | "FLASK" | "DOTNET"
       > = {
         react: "REACT",
         nextjs: "NEXTJS",
@@ -208,6 +208,8 @@ const TemplateSelectionModal = ({
         vue: "VUE",
         hono: "HONO",
         angular: "ANGULAR",
+        flask: "FLASK",
+        dotnet: "DOTNET",
       };
 
       const template = templates.find((t) => t.id === selectedTemplate);
