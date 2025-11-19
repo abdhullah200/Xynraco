@@ -1,7 +1,7 @@
 "use client";
 import TemplateSelectionModal from "@/components/modal/template-selector-modal";
 import { Button } from "@/components/ui/button"
-import { createPlayground } from "@/features/playground/actions";
+import { createPlayground } from "@/features/dashboard/action";
 import { Plus } from 'lucide-react'
 import Image from "next/image"
 import { useRouter } from "next/navigation";
@@ -12,16 +12,35 @@ const AddNewButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<{
     title: string;
-    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"| "DOTNET"|"FLASK";
     description?: string;
   } | null>(null)
   const router = useRouter()
 
   const handleSubmit = async(data: {
     title: string;
-    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"| "DOTNET"|"FLASK";
     description?: string;
   }) => {
+    try {
+      const result = await createPlayground({
+        title: data.title,
+        template: data.template,
+        description: data.description,
+        userId: "" // This will be handled by the server action using auth
+      });
+
+      if (result) {
+        toast.success("Playground created successfully!");
+        setIsModalOpen(false);
+        router.refresh(); // Refresh the page to show the new playground
+      } else {
+        toast.error("Failed to create playground. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error creating playground:", error);
+      toast.error("An error occurred while creating the playground.");
+    }
   }
 
   return (

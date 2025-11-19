@@ -134,11 +134,11 @@ const templates: TemplateOption[] = [
     category: "fullstack",
   },
   {
-    id: "Flask",
+    id: "flask",
     name: "Flask",
     description:
         "A lightweight WSGI web application framework in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.",
-    icon: "/flask-icon.svg",
+    icon: "/Flask.svg",
     color: "#000000",
     popularity: 4,
     tags: ["Python", "Backend", "WSGI"],
@@ -200,7 +200,7 @@ const TemplateSelectionModal = ({
     if (selectedTemplate) {
       const templateMap: Record<
         string,
-        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"
+        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR" | "FLASK" | "DOTNET"
       > = {
         react: "REACT",
         nextjs: "NEXTJS",
@@ -208,6 +208,8 @@ const TemplateSelectionModal = ({
         vue: "VUE",
         hono: "HONO",
         angular: "ANGULAR",
+        flask: "FLASK",
+        dotnet: "DOTNET",
       };
 
       const template = templates.find((t) => t.id === selectedTemplate);
@@ -292,7 +294,7 @@ const TemplateSelectionModal = ({
                 <Tabs
                   defaultValue="all"
                   className="w-full sm:w-auto"
-                  onValueChange={(value) => setCategory(value as any)}
+                  onValueChange={(value) => setCategory(value as "all" | "frontend" | "backend" | "fullstack")}
                 >
                   <TabsList className="grid grid-cols-4 w-full sm:w-[400px]">
                     <TabsTrigger value="all">All</TabsTrigger>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { deleteProjectById, editProjectById, duplicateProjectById } from "@/features/playground/actions";
+import { deletePlaygroundById, editPlaygroundById, duplicateProjectById } from "@/features/dashboard/action";
 import ProjectTable from "./project-table";
 import type { Project } from "../types";
 
@@ -15,7 +15,7 @@ export default function ClientProjectTable({ projects }: ClientProjectTableProps
 
   const handleDeleteProject = async (id: string) => {
     try {
-      await deleteProjectById(id);
+      await deletePlaygroundById(id);
       toast.success("Project deleted successfully");
       router.refresh(); // Refresh to update the list
     } catch (error) {
@@ -26,7 +26,7 @@ export default function ClientProjectTable({ projects }: ClientProjectTableProps
 
   const handleUpdateProject = async (id: string, data: { title: string; description: string }) => {
     try {
-      await editProjectById(id, data);
+      await editPlaygroundById(id, data);
       toast.success("Project updated successfully");
       router.refresh(); // Refresh to update the list
     } catch (error) {
