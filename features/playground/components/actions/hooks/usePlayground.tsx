@@ -1,33 +1,31 @@
-import { getAllPlaygroundForUser } from "@/features/dashboard/action";
-import { TemplateFolder } from "@/features/playground/lib/path-to-json";
-import { db } from "@/lib/db";
-import { set } from "date-fns";
-import { fi } from "date-fns/locale";
-import { get } from "http";
-import { useState,useEffect,useCallback } from "react";
-import { toast } from "sonner";
 
-interface PlaygroundData{
-    id: string;
-    name?: string;
-    [key: string]: any;
+import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
+import { getPlaygroundById, SaveUpdatedCode } from '@/features/playground/components/actions';
+import type { TemplateFolder } from '@/features/playground/lib/path-to-json';
+
+interface PlaygroundData {
+  id: string;
+  name?: string;
+  [key: string]: any;
 }
 
 interface UsePlaygroundReturn {
-    playground: PlaygroundData | null;
-    templateData: any;
-    isLoading: boolean;
-    error: string | null;
-    loadPlayground: ()=>Promise<void>;
-    saveTemplate: (data: TemplateFolder)=>Promise<void>;
+  playgroundData: PlaygroundData | null;
+  templateData: TemplateFolder | null;
+  isLoading: boolean;
+  error: string | null;
+  loadPlayground: () => Promise<void>;
+  saveTemplateData: (data: TemplateFolder) => Promise<void>;
 }
 
-export const UsePlayground = (id:string): UsePlaygroundReturn => {
-    const [playground, setPlayground] = useState<PlaygroundData | null>(null);
-    const [templateData, setTemplateData] = useState<TemplateFolder | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-    const loadPlayground = useCallback(async () => {
+export const usePlayground = (id: string): UsePlaygroundReturn => {
+  const [playgroundData, setPlaygroundData] = useState<PlaygroundData | null>(null);
+  const [templateData, setTemplateData] = useState<TemplateFolder | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadPlayground = useCallback(async () => {
     if (!id) return;
 
     try {
@@ -72,4 +70,29 @@ export const UsePlayground = (id:string): UsePlaygroundReturn => {
       setIsLoading(false);
     }
   }, [id]);
-}
+
+  const saveTemplateData = useCallback(async (data: TemplateFolder) => {
+    try {
+      await SaveUpdatedCode(id, data);
+      setTemplateData(data);
+      toast.success("Changes saved successfully");
+    } catch (error) {
+      console.error("Error saving template data:", error);
+      toast.error("Failed to save changes");
+      throw error;
+    }
+  }, [id]);
+
+  useEffect(() => {
+    loadPlayground();
+  }, [loadPlayground]);
+
+  return {
+    playgroundData,
+    templateData,
+    isLoading,
+    error,
+    loadPlayground,
+    saveTemplateData,
+  };
+};
