@@ -3,12 +3,12 @@ import { SidebarInset, SidebarTrigger, SidebarProvider } from "@/components/ui/s
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
 import React from "react";
-import TemplateFileTree from "@/features/playground/components/template-file-tree";
 
 const Page = () => {
     const {id} = useParams<{id: string}>();
 
     return(
+
         <>
             <SidebarProvider suppressHydrationWarning>
             <TemplateFileTree />
@@ -27,7 +27,7 @@ const Page = () => {
             </div>
             </SidebarProvider>
         </>
-    )
+
 }
 
 export default Page;

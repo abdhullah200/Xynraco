@@ -18,24 +18,59 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       void profile;
       if (!user || !account) return false;
 
-      const sessionState =
-        typeof account.session_state === "string" ? account.session_state : null;
+      try {
+        const sessionState =
+          typeof account.session_state === "string" ? account.session_state : null;
 
-      // Check if the user already exists
-      const existingUser = await db.user.findUnique({
-        where: { email: user.email! },
-      });
+        // Check if the user already exists
+        const existingUser = await db.user.findUnique({
+          where: { email: user.email! },
+        });
 
-      // If user does not exist, create a new one
-      if (!existingUser) {
-        const newUser = await db.user.create({
-          data: {
-            email: user.email!,
-            name: user.name,
-            image: user.image,
-           
-            accounts: {
-              create: {
+        // If user does not exist, create a new one
+        if (!existingUser) {
+          const newUser = await db.user.create({
+            data: {
+              email: user.email!,
+              name: user.name,
+              image: user.image,
+             
+              accounts: {
+                create: {
+                  type: account.type,
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                  refreshToken: account.refresh_token ?? null,
+                  accessToken: account.access_token ?? null,
+                  expiresAt: account.expires_at ?? null,
+                  tokenType: account.token_type ?? null,
+                  scope: account.scope ?? null,
+                  idToken: account.id_token ?? null,
+                  sessionState,
+                },
+              },
+            },
+          });
+
+          if (!newUser) return false; // Return false if user creation fails
+        } else {
+          // Link the account if user exists
+          const existingAccount = await db.account.findUnique({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+              },
+            },
+          });
+
+          // If the account does not exist, create it
+          if (!existingAccount) {
+            const fallbackSessionState =
+              typeof account.session_state === "string" ? account.session_state : null;
+            await db.account.create({
+              data: {
+                userId: existingUser.id,
                 type: account.type,
                 provider: account.provider,
                 providerAccountId: account.providerAccountId,
@@ -45,47 +80,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 tokenType: account.token_type ?? null,
                 scope: account.scope ?? null,
                 idToken: account.id_token ?? null,
-                sessionState,
+                sessionState: fallbackSessionState,
               },
-            },
-          },
-        });
-
-        if (!newUser) return false; // Return false if user creation fails
-      } else {
-        // Link the account if user exists
-        const existingAccount = await db.account.findUnique({
-          where: {
-            provider_providerAccountId: {
-              provider: account.provider,
-              providerAccountId: account.providerAccountId,
-            },
-          },
-        });
-
-        // If the account does not exist, create it
-        if (!existingAccount) {
-          const fallbackSessionState =
-            typeof account.session_state === "string" ? account.session_state : null;
-          await db.account.create({
-            data: {
-              userId: existingUser.id,
-              type: account.type,
-              provider: account.provider,
-              providerAccountId: account.providerAccountId,
-              refreshToken: account.refresh_token ?? null,
-              accessToken: account.access_token ?? null,
-              expiresAt: account.expires_at ?? null,
-              tokenType: account.token_type ?? null,
-              scope: account.scope ?? null,
-              idToken: account.id_token ?? null,
-              sessionState: fallbackSessionState,
-            },
-          });
+            });
+          }
         }
-      }
 
-      return true;
+        return true;
+      } catch (error) {
+        console.error("Database error during signIn, allowing sign-in without database persistence:", error.message);
+        // Allow sign-in to continue even if database operations fail
+        // The user will still get a valid session, just without database persistence
+        return true;
+      }
     },
 
     async jwt({ token, user, account }) {
@@ -93,20 +100,30 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       void account;
 
       if (!token.sub) return token;
-      const existingUser = await getUserById(token.sub);
+      
+      try {
+        const existingUser = await getUserById(token.sub);
 
-      if (!existingUser) return token;
+        if (!existingUser) {
+          console.warn("User not found in database, using token data");
+          return token;
+        }
 
-      const existingAccount = await getAccountByUserId(existingUser.id);
-      if (existingAccount?.provider) {
-        token.provider = existingAccount.provider;
+        const existingAccount = await getAccountByUserId(existingUser.id);
+        if (existingAccount?.provider) {
+          token.provider = existingAccount.provider;
+        }
+
+        token.name = existingUser.name ?? token.name;
+        token.email = existingUser.email ?? token.email;
+        token.role = existingUser.role;
+
+        return token;
+      } catch (error) {
+        console.error("Database error in JWT callback, using existing token data:", error.message);
+        // Continue with existing token data when database is unavailable
+        return token;
       }
-
-      token.name = existingUser.name ?? token.name;
-      token.email = existingUser.email ?? token.email;
-      token.role = existingUser.role;
-
-      return token;
     },
 
     async session({ session, token }) {
