@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  //url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -66,7 +66,7 @@ model Playground {
   title         String
   description   String?
   template      Templates      @default(REACT)
-  templateFiles TemplateFile[] 
+  templateFiles TemplateFile[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   Starmark      StarMark[]
@@ -74,13 +74,21 @@ model Playground {
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model TemplateFile{
+model TemplateFile {
   id           String     @id @default(cuid()) @map("_id")
-  content      Json
+  path         String     // Full path like "src/components/Button.tsx"
+  filename     String     // Just the filename like "Button"
+  extension    String     // File extension like "tsx"
+  content      String     // File content
+  isFolder     Boolean    @default(false)
+  parentPath   String?    // Parent folder path, null for root level
+  playgroundId String
+  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  playgroundId String @unique
-  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+
+  @@index([playgroundId])
+  @@index([playgroundId, path])
 }
 
 model StarMark {
