@@ -1,0 +1,37 @@
+"use client";
+import { SidebarInset, SidebarTrigger, SidebarProvider } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { useParams } from "next/navigation";
+import React from "react";
+import { usePlayground } from "@/features/playground/components/actions/hooks/usePlayground";
+
+const ClientPage = () => {
+    const {id} = useParams<{id: string}>();
+    const {playgroundData: PlaygroundData,templateData,isLoading,error,loadPlayground,saveTemplateData}=usePlayground(id);
+
+    return(
+        <SidebarProvider>
+            <div>
+                <>
+                {/* TEMPLATE TREE */}
+                <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <SidebarTrigger className="-m1-1"/>
+                        <Separator className="mr-2 h-4" />
+
+                        <div className="flex flex-1 items-center gap-2">
+                            <div className="flex flex-col flex-1">
+                                {PlaygroundData?.title || "Code Playground"}
+
+                            </div>
+
+                        </div>
+                </header>
+            </SidebarInset>
+            </>
+        </div>
+    </SidebarProvider>
+    )
+}
+
+export default ClientPage;

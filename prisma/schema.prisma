@@ -86,6 +86,23 @@ model TemplateFile{
   playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
 }
 
+model TemplateFile {
+  id           String     @id @default(cuid()) @map("_id")
+  path         String     // Full path like "src/components/Button.tsx"
+  filename     String     // Just the filename like "Button"
+  extension    String     // File extension like "tsx"
+  content      String     // File content
+  isFolder     Boolean    @default(false)
+  parentPath   String?    // Parent folder path, null for root level
+  playgroundId String
+  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([playgroundId])
+  @@index([playgroundId, path])
+}
+
 model StarMark {
   id           String     @id @default(cuid()) @map("_id")
   userId       String

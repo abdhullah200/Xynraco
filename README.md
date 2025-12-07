@@ -78,8 +78,8 @@ If you find this project helpful, please consider supporting it with a ⭐
 ## 🧭 Roadmap (Preview)
 
 - [ ] Phase 1 – Project Setup  
-- [x] Phase 2 – Core UI and Layout  
-- [ ] **Phase 4 – Editor + WebContainer Integration (current)**  
+- [ ] Phase 2 – Core UI and Layout  
+- [x] Phase 4 – Editor + WebContainer Integration (current)  
 - [ ] Phase 5 – AI Model Integration (Ollama)  
 - [ ] Phase 6 – Terminal Integration  
 - [ ] Phase 7 – Templates and Persistence  
