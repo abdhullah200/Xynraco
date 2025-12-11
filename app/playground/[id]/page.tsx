@@ -1,6 +1,7 @@
 "use client"
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import TemplateFileTree from '@/features/playground/components/template-file-tree';
 import { usePlayground } from '@/features/playground/hooks/usePlayground';
 import { Separator } from '@radix-ui/react-separator';
 import { Sidebar } from 'lucide-react';
@@ -17,6 +18,8 @@ const Page = ()=>{
     return (
         <div>
             <>
+                <TemplateFileTree
+                data={templateData!} />
                 {/**Template file tree */}
                 <SidebarInset>
                     <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
