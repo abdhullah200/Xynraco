@@ -1,7 +1,9 @@
 "use client"
 import { Button } from '@/components/ui/button';
+import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
+import PlaygroundEditor from '@/features/playground/components/playground-editor';
 import TemplateFileTree from '@/features/playground/components/template-file-tree';
 import { useFileExplorer } from '@/features/playground/hooks/useFileExplorer';
 import { usePlayground } from '@/features/playground/hooks/usePlayground';
@@ -13,7 +15,7 @@ import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import { se } from 'date-fns/locale';
 import { Bot, Divide, File, FileText, Save, Settings, Sidebar, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { act, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { file } from 'zod';
 
@@ -40,7 +42,19 @@ const Page = ()=>{
     setActiveFileId,
     setPlaygroundId,
     setOpenFiles,
+    saveActiveFile,
+    saveAllFiles,
   } = useFileExplorer();
+
+  useEffect(()=>{
+    setPlaygroundId(id);
+  },[id,setPlaygroundId])
+
+  useEffect(()=>{
+    if(templateData && !open.length){
+        setTemplateData(templateData)
+    }
+  },[templateData,setTemplateData,openFile.length])
 
   const activeFile =  openFiles.find((file) => file.id === activeFileId);
   const hasUnsavedChanges = openFiles.some((file)=> file.hasUnsavedChanges);
@@ -73,10 +87,10 @@ const Page = ()=>{
                                         <Button
                                         size={"sm"}
                                         variant={"outline"}
-                                        onClick={() => {
-                                          toast.success("File saved!");
+                                        onClick={async () => {
+                                          await saveActiveFile(saveTemplateData);
                                         }}
-                                        disabled={hasUnsavedChanges}>
+                                        disabled={!hasUnsavedChanges}>
                                             <Save className='size-4'/>
                                         </Button>
                                     </TooltipTrigger>
@@ -90,10 +104,10 @@ const Page = ()=>{
                                         <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => {
-                                          toast.success("All files saved!");
+                                        onClick={async () => {
+                                          await saveAllFiles(saveTemplateData);
                                         }}
-                                        disabled={hasUnsavedChanges}>
+                                        disabled={!hasUnsavedChanges}>
                                         <Save className='size-4'/>
                                         </Button>
                                     </TooltipTrigger>
@@ -192,9 +206,21 @@ const Page = ()=>{
                                     </Tabs>
                                 </div>
                                 <div className='flex-1'>
-                                        {
-                                            activeFile?.content || "No content"
-                                        }
+                                        <ResizablePanelGroup
+                                        direction='horizontal'
+                                        className='h-full'>
+                                            <ResizablePanel defaultSize={isPreviewVisible ? 50:100}>
+                                                <PlaygroundEditor
+                                                activeFile={activeFile}
+                                                content={activeFile?.content || ""}
+                                                onContentChange={(value) => 
+                                                    activeFileId && updateFileContent(activeFileId, value)
+                                                }
+                                                />
+
+                                            </ResizablePanel>
+
+                                        </ResizablePanelGroup>
                                 </div>
                         </div>) : (
                             <div className='flex flex-col h-full items-center justify-center text-muted-foreground gap-4'>
