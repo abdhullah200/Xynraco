@@ -67,6 +67,8 @@ interface FileExplorerState {
     saveTemplateData: (data: TemplateFolder) => Promise<void>
   ) => Promise<void>;
   updateFileContent: (fileId: string, content: string) => void;
+  saveActiveFile: (saveTemplateData: (data: TemplateFolder) => Promise<void>) => Promise<void>;
+  saveAllFiles: (saveTemplateData: (data: TemplateFolder) => Promise<void>) => Promise<void>;
 }
 
 //@ts-ignore
@@ -439,6 +441,104 @@ export const useFileExplorer= create<FileExplorerState>((set, get) => ({
       editorContent:
         fileId === state.activeFileId ? content : state.editorContent,
     }));
+  },
+
+  saveActiveFile: async (saveTemplateData) => {
+    const { templateData, openFiles, activeFileId } = get();
+    if (!templateData || !activeFileId) return;
+
+    try {
+      const activeFile = openFiles.find((f) => f.id === activeFileId);
+      if (!activeFile || !activeFile.hasUnsavedChanges) return;
+
+      // Update the content in templateData
+      const updatedTemplateData = JSON.parse(JSON.stringify(templateData)) as TemplateFolder;
+      
+      const updateFileInFolder = (folder: TemplateFolder): boolean => {
+        for (let i = 0; i < folder.items.length; i++) {
+          const item = folder.items[i];
+          if ("filename" in item) {
+            if (item.filename === activeFile.filename && item.fileExtension === activeFile.fileExtension) {
+              (folder.items[i] as TemplateFile).content = activeFile.content;
+              return true;
+            }
+          } else if ("folderName" in item) {
+            if (updateFileInFolder(item as TemplateFolder)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
+      updateFileInFolder(updatedTemplateData);
+
+      // Update the state
+      set({
+        templateData: updatedTemplateData,
+        openFiles: openFiles.map((f) =>
+          f.id === activeFileId
+            ? { ...f, hasUnsavedChanges: false, originalContent: f.content }
+            : f
+        ),
+      });
+
+      await saveTemplateData(updatedTemplateData);
+      toast.success(`Saved: ${activeFile.filename}.${activeFile.fileExtension}`);
+    } catch (error) {
+      console.error("Error saving file:", error);
+      toast.error("Failed to save file");
+    }
+  },
+
+  saveAllFiles: async (saveTemplateData) => {
+    const { templateData, openFiles } = get();
+    if (!templateData) return;
+
+    try {
+      const filesWithChanges = openFiles.filter((f) => f.hasUnsavedChanges);
+      if (filesWithChanges.length === 0) return;
+
+      // Update the content in templateData for all files
+      const updatedTemplateData = JSON.parse(JSON.stringify(templateData)) as TemplateFolder;
+      
+      const updateFileInFolder = (folder: TemplateFolder, file: OpenFile): boolean => {
+        for (let i = 0; i < folder.items.length; i++) {
+          const item = folder.items[i];
+          if ("filename" in item) {
+            if (item.filename === file.filename && item.fileExtension === file.fileExtension) {
+              (folder.items[i] as TemplateFile).content = file.content;
+              return true;
+            }
+          } else if ("folderName" in item) {
+            if (updateFileInFolder(item as TemplateFolder, file)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
+      filesWithChanges.forEach((file) => {
+        updateFileInFolder(updatedTemplateData, file);
+      });
+
+      // Update the state
+      set({
+        templateData: updatedTemplateData,
+        openFiles: openFiles.map((f) =>
+          f.hasUnsavedChanges
+            ? { ...f, hasUnsavedChanges: false, originalContent: f.content }
+            : f
+        ),
+      });
+
+      await saveTemplateData(updatedTemplateData);
+      toast.success(`Saved ${filesWithChanges.length} file(s)`);
+    } catch (error) {
+      console.error("Error saving files:", error);
+      toast.error("Failed to save files");
+    }
   },
 }));
 
