@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
 import PlaygroundEditor from '@/features/playground/components/playground-editor';
@@ -8,6 +8,8 @@ import TemplateFileTree from '@/features/playground/components/template-file-tre
 import { useFileExplorer } from '@/features/playground/hooks/useFileExplorer';
 import { usePlayground } from '@/features/playground/hooks/usePlayground';
 import { TemplateFile } from '@/features/playground/lib/path-to-json';
+import WebContainerPreview from '@/features/WebContainers/components/WebContainer-preview';
+import { useWebContainer } from '@/features/WebContainers/hooks/useWebContainer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Separator } from '@radix-ui/react-separator';
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
@@ -45,6 +47,15 @@ const Page = ()=>{
     saveActiveFile,
     saveAllFiles,
   } = useFileExplorer();
+
+  const {
+    serverUrl,
+    isLoading: containerLaoding,
+    error: containerError,
+    instance,
+    writeFileSync
+    // @ts-ignore
+  } =useWebContainer({templateData})
 
   useEffect(()=>{
     setPlaygroundId(id);
@@ -219,6 +230,23 @@ const Page = ()=>{
                                                 />
 
                                             </ResizablePanel>
+                                            {
+                                                isPreviewVisible && (
+                                                    <>
+                                                    <ResizableHandle/>
+                                                    <ResizablePanel defaultSize={50}>
+                                                        <WebContainerPreview
+                                                            templateData={templateData!}
+                                                            serverUrl={serverUrl}
+                                                            isLoading={containerLaoding}
+                                                            error={containerError}
+                                                            instance={instance}
+                                                            writeFileSync={writeFileSync}
+                                                        />
+                                                    </ResizablePanel>
+                                                    </>
+                                                )
+                                            }
 
                                         </ResizablePanelGroup>
                                 </div>
