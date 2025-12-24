@@ -4,7 +4,7 @@ import { TemplateFolder } from "@/features/playground/types";
 import { set } from "zod";
 
 interface UseWebContainerProps {
-  templateData: TemplateFolder;
+  templateData: TemplateFolder | null;
 }
 
 interface UseWebContainerReturn {

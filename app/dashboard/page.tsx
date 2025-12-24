@@ -17,15 +17,12 @@ const DashboardMainPage = async () => {
       </div>
       <div className="mt-10 flex flex-col justify-center items-center w-full">
         {playgrounds && playgrounds.length === 0 ? (
-          
           <EmptyState title="No projects found" description="Create a new project to get started!" imageSrc='/empty-state.svg'/>
         ) : (
           <ClientProjectTable
-          //@ts-ignore
-            projects={playgrounds||[]}
-        />
-        )
-}
+          //@ts-ignore 
+          projects={playgrounds || []} />
+        )}
       </div>
     </div>
   );

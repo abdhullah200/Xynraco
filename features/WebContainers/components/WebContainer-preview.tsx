@@ -1,12 +1,12 @@
-"use client"
+"use client";
+
+import React, { useEffect, useState, useRef } from "react";
 import { TemplateFolder } from '@/features/playground/types';
-import { WebContainer } from '@webcontainer/api';
-import { is, se, tr } from 'date-fns/locale';
-import React ,{useEffect,useState,useRef, use} from 'react'
-import { start } from 'repl';
-import { set, transform } from 'zod';
-import { transformToWebContainerFormat } from '../hooks/transformer';
-import { Loader2 } from 'lucide-react';
+import { transformToWebContainerFormat } from "../hooks/transformer";
+import { CheckCircle, Loader2, XCircle, Terminal, ChevronDown, ChevronUp } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { WebContainer } from "@webcontainer/api";
+import TerminalComponent from "./terminal";
 
 interface WebContainerPreviewProps {
   templateData: TemplateFolder;
@@ -203,7 +203,9 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
         startProcess.output.pipeTo(
           new WritableStream({
             write(data) {
-              
+              if (terminalRef.current?.writeToTerminal) {
+                terminalRef.current.writeToTerminal(data);
+              }
             },
           })
         );
@@ -240,22 +242,123 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
   }, []);
 
   if (isLoading) {
-    return <div className='h-full flex items-center justify-center'>
-        <div className='text-center space-y-4 max-w-md p-6 rounded-lg bg-gray-50 dark:bg-gray-900'>
-            <Loader2 className='h-10 w-10 animate-spin text-primary mx-auto'/>
-            <h3 className='text-lg font-medium'>Initializing WebContainer...</h3>
-            <p className='text-sm text-gray-500 dark:text-gray-400'>
-                Setting up your development environment. This may take a few moments.
-            </p>
-        </div>
-    </div>
-
-  }
     return (
-     
-        <div>
-            webcontainer preview - to be continued
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md p-6 rounded-lg bg-gray-50 dark:bg-gray-900">
+          <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
+          <h3 className="text-lg font-medium">Initializing WebContainer</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Setting up the environment for your project...
+          </p>
         </div>
+      </div>
+    );
+  }
+
+  if (error || setupError) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-6 rounded-lg max-w-md">
+          <div className="flex items-center gap-2 mb-3">
+            <XCircle className="h-5 w-5" />
+            <h3 className="font-semibold">Error</h3>
+          </div>
+          <p className="text-sm">{error || setupError}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const getStepIcon = (stepIndex: number) => {
+    if (stepIndex < currentStep) {
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    } else if (stepIndex === currentStep) {
+      return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
+    } else {
+      return <div className="h-5 w-5 rounded-full border-2 border-gray-300" />;
+    }
+  };
+
+  const getStepText = (stepIndex: number, label: string) => {
+    const isActive = stepIndex === currentStep;
+    const isComplete = stepIndex < currentStep;
+    
+    return (
+      <span className={`text-sm font-medium ${
+        isComplete ? 'text-green-600' : 
+        isActive ? 'text-blue-600' : 
+        'text-gray-500'
+      }`}>
+        {label}
+      </span>
+    );
+  };
+
+  return (
+    <div className="h-full w-full flex flex-col">
+      {!previewUrl ? (
+        <div className="h-full flex flex-col">
+          <div className="w-full max-w-md p-6 m-5 rounded-lg bg-white dark:bg-zinc-800 shadow-sm mx-auto">
+           
+
+            <Progress
+              value={(currentStep / totalSteps) * 100}
+              className="h-2 mb-6"
+            />
+
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center gap-3">
+                {getStepIcon(1)}
+                {getStepText(1, "Transforming template data")}
+              </div>
+              <div className="flex items-center gap-3">
+                {getStepIcon(2)}
+                {getStepText(2, "Mounting files")}
+              </div>
+              <div className="flex items-center gap-3">
+                {getStepIcon(3)}
+                {getStepText(3, "Installing dependencies")}
+              </div>
+              <div className="flex items-center gap-3">
+                {getStepIcon(4)}
+                {getStepText(4, "Starting development server")}
+              </div>
+            </div>
+          </div>
+
+          {/* Terminal */}
+          <div className="flex-1 p-4">
+            <TerminalComponent 
+              ref={terminalRef}
+              webContainerInstance={instance}
+              theme="dark"
+              className="h-full"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="h-full flex flex-col">
+          {/* Preview */}
+          <div className="flex-1">
+            <iframe
+              src={previewUrl}
+              className="w-full h-full border-none"
+              title="WebContainer Preview"
+            />
+          </div>
+          
+          {/* Terminal at bottom when preview is ready */}
+          <div className="h-64 border-t">
+            <TerminalComponent 
+              ref={terminalRef}
+              webContainerInstance={instance}
+              theme="dark"
+              className="h-full"
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
