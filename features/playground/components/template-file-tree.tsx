@@ -48,6 +48,29 @@ const TemplateFileTree = ({
         setIsNewFolderModalOpen(true);
     }
 
+  const handleCreateFile = (filename: string, extension: string) => {
+    if (onAddFile && isRootFolder) {
+      const newFile: TemplateFile = {
+        filename,
+        fileExtension: extension,
+        content: "",
+      }
+      onAddFile(newFile, "")
+    }
+    setIsNewFileModalOpen(false)
+  }
+
+  const handleCreateFolder = (folderName: string) => {
+    if (onAddFolder && isRootFolder) {
+      const newFolder: TemplateFolder = {
+        folderName,
+        items: [],
+      }
+      onAddFolder(newFolder, "")
+    }
+    setIsNewFolderModalOpen(false)
+  }
+
   return (
         <Sidebar>
         <SidebarContent>
@@ -114,12 +137,12 @@ const TemplateFileTree = ({
         <NewFileDialog
         isOpen={isNewFileModalOpen}
         onClose={() => setIsNewFileModalOpen(false)}
-        onCreateFile={() => {}}
+        onCreateFile={handleCreateFile}
         />
         <NewFolderDialog
         isOpen={isNewFolderModalOpen}
         onClose={() => setIsNewFolderModalOpen(false)}
-        onCreateFolder={() => {}}
+        onCreateFolder={handleCreateFolder}
         />
 
     </Sidebar>

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { TemplateFolder } from '@/features/playground/types';
+import type { TemplateFolder } from "@/features/playground/lib/path-to-json";
 import { transformToWebContainerFormat } from "../hooks/transformer";
-import { CheckCircle, Loader2, XCircle, Terminal, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { WebContainer } from "@webcontainer/api";
 import TerminalComponent from "./terminal";
+import { WebContainer } from "@webcontainer/api";
 
 interface WebContainerPreviewProps {
   templateData: TemplateFolder;

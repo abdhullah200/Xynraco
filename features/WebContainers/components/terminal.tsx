@@ -47,53 +47,6 @@ const TerminalComponent = forwardRef<TerminalRef, TerminalProps>(({
   const currentProcess = useRef<any>(null);
   const shellProcess = useRef<any>(null);
 
-  
-    const TerminalComponent = forwardRef((props, ref) => {
-  const terminalRef = useRef<HTMLDivElement>(null);
-  const xtermRef = useRef<any>(null);
-
-  useEffect(() => {
-    let Terminal, FitAddon, WebLinksAddon, SearchAddon;
-    let term, fitAddon, webLinksAddon, searchAddon;
-
-    // Only run on client
-    if (typeof window !== "undefined") {
-      (async () => {
-        Terminal = (await import("xterm")).Terminal;
-        FitAddon = (await import("xterm-addon-fit")).FitAddon;
-        WebLinksAddon = (await import("xterm-addon-web-links")).WebLinksAddon;
-        SearchAddon = (await import("xterm-addon-search")).SearchAddon;
-
-        term = new Terminal();
-        fitAddon = new FitAddon();
-        webLinksAddon = new WebLinksAddon();
-        searchAddon = new SearchAddon();
-
-        term.loadAddon(fitAddon);
-        term.loadAddon(webLinksAddon);
-        term.loadAddon(searchAddon);
-
-        term.open(terminalRef.current!);
-        fitAddon.fit();
-
-        xtermRef.current = term;
-      })();
-    }
-
-    return () => {
-      if (xtermRef.current) {
-        xtermRef.current.dispose();
-      }
-    };
-  }, []);
-
-  useImperativeHandle(ref, () => ({
-    // expose methods if needed
-  }));
-
-  return <div ref={terminalRef} style={{ width: "100%", height: "100%" }} />;
-});
-
   const terminalThemes = {
     dark: {
       background: "#09090B",
