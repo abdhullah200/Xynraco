@@ -3,50 +3,48 @@
 # 🚀 Xynraco Editor
 
 **A modern, web-based IDE built for the next generation of developers.**  
-Built with **Next.js**, powered by **WebContainers**, and enhanced by **AI-assisted coding** through **Ollama** — all running *directly in your browser*.
+Built with **Next.js**, powered by **WebContainers**, and enhanced by **AI-assisted coding** via **Ollama** — all running *directly in your browser*.
 
----
-
-<img width="1024" height="1024" alt="ChatGPT Image Nov 2, 2025, 03_47_51 PM" src="https://github.com/user-attachments/assets/4e7791f7-8971-4add-baa0-8975ffae0ea3" />
-
+<img width="1024" height="1024" alt="Xynraco Editor Preview" src="https://github.com/user-attachments/assets/4e7791f7-8971-4add-baa0-8975ffae0ea3" />
 
 </div>
+
+---
 
 ## ✨ Features (WIP)
 
 | Feature | Description |
-|----------|--------------|
-| ⚡ **Real-time Execution** | Run code directly in your browser with WebContainers — no setup required. |
-| 🧠 **AI Assistance (Ollama)** | Get intelligent code completions and explanations locally. |
-| 🧩 **Multi-Stack Templates** | Quickly spin up frontend, backend, or fullstack starter projects. |
-| 💻 **Integrated Terminal** | Work entirely in-browser with a fully functional terminal. |
-| 🎨 **Developer-First UI** | Modern, minimal interface optimized for productivity. |
+|--------|-------------|
+| ⚡ **Real-time Execution** | Run code instantly in the browser using WebContainers — no local setup required. |
+| 🧠 **AI Assistance (Ollama)** | Local AI for code completion, explanations, and productivity boosts. |
+| 🧩 **Multi-Stack Templates** | Quickly bootstrap frontend, backend, or full-stack projects. |
+| 💻 **Integrated Terminal** | A fully functional in-browser terminal for a seamless workflow. |
+| 🎨 **Developer-First UI** | Clean, modern, and productivity-focused interface. |
 
 ---
 
 ## 🧱 Current Progress
 
-> **Development Phase:** `4 / 14`  
-> 🚧 *Actively in development — coming soon!*
-
-Stay tuned for early access and version milestones.
+> **Development Phase:** ` 10 / 14`  
+> 🚧 *Actively under development — early builds coming soon.*
 
 ---
 
 ## 🖼️ UI Previews
 
-Below are some early-stage interfaces built so far 👇  
-(You can replace these placeholders with real screenshots.)
+Early-stage interfaces built so far 👇
 
 <div align="center">
 
 ### 🏠 Home Page
-<img width="1355" height="596" alt="image" src="https://github.com/user-attachments/assets/bf851acf-0918-44b2-ab53-b741a6464009" />
+<img width="1355" height="596" alt="Home Page" src="https://github.com/user-attachments/assets/bf851acf-0918-44b2-ab53-b741a6464009" />
 
 ### 📊 Dashboard
-<img width="1341" height="603" alt="image" src="https://github.com/user-attachments/assets/92fef304-d60a-42d7-987f-cbaf222dd416" />
+<img width="1341" height="603" alt="Dashboard" src="https://github.com/user-attachments/assets/92fef304-d60a-42d7-987f-cbaf222dd416" />
 
 </div>
+
+---
 
 ## ⚙️ Tech Stack
 
@@ -55,42 +53,57 @@ Below are some early-stage interfaces built so far 👇
 - **Runtime:** WebContainers  
 - **AI Integration:** Ollama (Local LLM)  
 - **State Management:** Zustand / React Query  
-- **UI Library:** shadcn/ui + lucide-react  
+- **UI Components:** shadcn/ui, lucide-react  
 
 ---
 
 ## 🌍 Vision
 
-> To redefine the way developers build, test, and iterate — all from within the browser.
+> *Redefining how developers build, test, and iterate — entirely within the browser.*
 
-The **Xynraco Editor** aims to be more than an IDE — it’s a *complete developer workspace* that’s local, intelligent, and blazing fast.
+**Xynraco Editor** is more than just an IDE — it’s a **complete developer workspace** that is local-first, intelligent, and blazing fast.
+
+---
+
+## 🤝 Collaboration & Contributions
+
+🚀 **Contributions, fixes, and improvements are highly welcome!**
+
+If you’d like to:
+- Fix bugs  
+- Improve templates  
+- Optimize WebContainer workflows  
+- Enhance UI/UX  
+- Help with AI (Ollama) integration  
+
+Feel free to **open a Pull Request** or start a discussion.
+
+📩 For direct collaboration or quick communication, **message me on LinkedIn** — the link is available in my **GitHub bio**.
+
+---
+
+## 🧭 Roadmap (Preview)
+
+- [x] Phase 1 – Project Setup  
+- [x] Phase 2 – Core UI & Layout  
+- [x] Phase 3 – Editor Foundation  
+- [x] **Phase 4 – Editor + WebContainer Integration (current)**  
+- [x] Phase 5 – Terminal Integration  
+- [x] **Phase 6 – Templates & Persistence**  
+  > ⚠️ **Note:** Currently supports **Vite** and **Hono**.  
+  > React and Next.js templates are temporarily disabled due to dependency loading issues.
+- [x] **Phase 7 – AI Model Integration (Ollama)** *(current focus)*  
+- [ ] Phase 8 – Plugin System  
+- [ ] Phase 9 – Cloud Sync  
+- [ ] Phase 10–14 – Performance, Stability & UX Polish  
 
 ---
 
 ## 💜 Made with Love and Code
 
 **By [Abdullah Ariff](https://github.com/abdhullah200)**  
-If you find this project helpful, please consider supporting it with a ⭐
-
-
----
-
-## 🧭 Roadmap (Preview)
-
-- [X] Phase 1 – Project Setup  
-- [x] Phase 2 – Core UI and Layout  
-- [x] **Phase 4 – Editor + WebContainer Integration (current)**  
-- [x] Phase 5 – Terminal Integration
-- [x] Phase 6 –   AI Model Integration (Ollama)  
-- [ ] Phase 7 – Templates and Persistence  
-- [ ] Phase 8 – Plugin System  
-- [ ] Phase 9 – Cloud Sync  
-- [ ] Phase 10–14 – Performance & UX Polish  
-
+If you find this project useful, consider giving it a ⭐ to support the journey.
 
 ---
 
 > 💬 *“Code, create, and collaborate — all in one place.”*
-
----
-
