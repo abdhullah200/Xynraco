@@ -77,11 +77,11 @@ If you find this project helpful, please consider supporting it with a ⭐
 
 ## 🧭 Roadmap (Preview)
 
-- [ ] Phase 1 – Project Setup  
+- [X] Phase 1 – Project Setup  
 - [x] Phase 2 – Core UI and Layout  
-- [ ] **Phase 4 – Editor + WebContainer Integration (current)**  
-- [ ] Phase 5 – AI Model Integration (Ollama)  
-- [ ] Phase 6 – Terminal Integration  
+- [x] **Phase 4 – Editor + WebContainer Integration (current)**  
+- [x] Phase 5 – Terminal Integration
+- [x] Phase 6 –   AI Model Integration (Ollama)  
 - [ ] Phase 7 – Templates and Persistence  
 - [ ] Phase 8 – Plugin System  
 - [ ] Phase 9 – Cloud Sync  
