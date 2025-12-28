@@ -6,6 +6,7 @@ import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
 import PlaygroundEditor from '@/features/playground/components/playground-editor';
 import TemplateFileTree from '@/features/playground/components/template-file-tree';
+import ToggleAI from '@/features/playground/components/toggle-ai';
 import { useFileExplorer } from '@/features/playground/hooks/useFileExplorer';
 import { usePlayground } from '@/features/playground/hooks/usePlayground';
 import { findFilePath } from '@/features/playground/lib';
@@ -383,6 +384,12 @@ const Page = ()=>{
                   </TooltipTrigger>
                   <TooltipContent>Save All (Ctrl+Shift+S)</TooltipContent>
                 </Tooltip>
+
+                <ToggleAI
+                  isEnabled={false}
+                  onToggle={() =>{}}
+                  suggestionLoading={false}
+                  />
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

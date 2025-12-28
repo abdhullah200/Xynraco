@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import type { TemplateFolder } from "@/features/playground/lib/path-to-json";
+import { TemplateFolder } from '@/features/playground/lib/path-to-json';
 import { transformToWebContainerFormat } from "../hooks/transformer";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
