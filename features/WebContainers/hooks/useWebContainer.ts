@@ -1,10 +1,9 @@
-import { useState,useEffect,useCallback } from "react";
-import { WebContainer } from "@webcontainer/api";
-import { TemplateFolder } from "@/features/playground/types";
-import { set } from "zod";
+import { useState, useEffect, useCallback } from 'react';
+import { WebContainer } from '@webcontainer/api';
+import { TemplateFolder } from '@/features/playground/lib/path-to-json';
 
 interface UseWebContainerProps {
-  templateData: TemplateFolder | null;
+  templateData: TemplateFolder;
 }
 
 interface UseWebContainerReturn {
