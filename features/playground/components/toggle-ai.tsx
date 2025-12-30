@@ -40,19 +40,40 @@ import { is } from "date-fns/locale";
 interface ToggleAIProps {
   isEnabled: boolean;
   onToggle: (value: boolean) => void;
+  
   suggestionLoading: boolean;
   loadingProgress?: number;
   activeFeature?: string;
 }
-const ToggleAI = ({
+
+const ToggleAI: React.FC<ToggleAIProps> = ({
   isEnabled,
   onToggle,
+
   suggestionLoading,
   loadingProgress = 0,
   activeFeature,
-}: ToggleAIProps) => {
+}) => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  // Dummy handler for code insertion from AI chat panel
+  const handleInsertCode = (code: string, fileName?: string, position?: { line: number; column: number }) => {
+    // TODO: Implement actual code insertion logic
+    // For now, just log the code and info
+    console.log("Insert code:", { code, fileName, position });
+  };
+
+  // Dummy handler for running code from AI chat panel
+  const handleRunCode = (code: string, language: string) => {
+    console.log("Run code:", { code, language });
+  };
+
+  // Dummy activeFile and cursorPosition for demonstration
+  const activeFile = { name: "example.ts", content: "// file content" };
+  const cursorPosition = { line: 1, column: 1 };
 
   return (
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
@@ -151,8 +172,25 @@ const ToggleAI = ({
           </DropdownMenuItem>
           
           <DropdownMenuSeparator />
-      </DropdownMenuContent>
-    </DropdownMenu>
+          
+          <DropdownMenuItem 
+            onClick={() => setIsChatOpen(true)}
+            className="py-2.5 cursor-pointer"
+          >
+            <div className="flex items-center gap-3 w-full">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <div className="text-sm font-medium">Open Chat</div>
+                <div className="text-xs text-muted-foreground">
+                  Chat with AI assistant
+                </div>
+              </div>
+            </div>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+    </>
   );
 };
 
