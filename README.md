@@ -99,7 +99,9 @@ Feel free to **open a Pull Request** or start a discussion.
 
 ---
 
-## 💜 Made with Love and Code
+<div align="center">
+  
+### 💜 Made with Love and Code by Abdullah Ariff
 
 **By [Abdullah Ariff](https://github.com/abdhullah200)**  
 If you find this project useful, consider giving it a ⭐ to support the journey.
