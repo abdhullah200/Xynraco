@@ -4,7 +4,8 @@ import LoadingStep from '@/components/ui/loader';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
-import PlaygroundEditor from '@/features/playground/components/playground-editor';
+import { useAISuggestions } from '@/features/ai/hooks/useAISuggestions';
+import {PlaygroundEditor} from '@/features/playground/components/playground-editor';
 import TemplateFileTree from '@/features/playground/components/template-file-tree';
 import ToggleAI from '@/features/playground/components/toggle-ai';
 import { useFileExplorer } from '@/features/playground/hooks/useFileExplorer';
@@ -21,6 +22,7 @@ import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import { se } from 'date-fns/locale';
 import { write } from 'fs';
 import { AlertCircle, Bot, Divide, File, FileText, FolderOpen, Save, Settings, Sidebar, X } from 'lucide-react';
+import { editor } from 'monaco-editor';
 import { useParams } from 'next/navigation';
 import React, { act, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -30,6 +32,9 @@ import { file } from 'zod';
 const Page = ()=>{
     const {id} =useParams<{id:string}>();
     const [isPreviewVisible, setIsPreviewVisible] = useState(true);
+
+    const aiSuggestion = useAISuggestions();
+
   // Custom hooks
   const { playgroundData, templateData, isLoading, error, saveTemplateData } =usePlayground(id);
     const {
@@ -386,9 +391,9 @@ const Page = ()=>{
                 </Tooltip>
 
                 <ToggleAI
-                  isEnabled={false}
-                  onToggle={() =>{}}
-                  suggestionLoading={false}
+                  isEnabled={aiSuggestion.isEnabled}
+                  onToggle={aiSuggestion.toggleEnabled}
+                  suggestionLoading={aiSuggestion.isLoading}
                   />
 
                 <DropdownMenu>
@@ -479,7 +484,20 @@ const Page = ()=>{
                         onContentChange={(value) =>
                           activeFileId && updateFileContent(activeFileId, value)
                         }
+                        suggestion={aiSuggestion.suggestion}
+                        suggestionLoading={aiSuggestion.isLoading}
+                        suggestionPosition={aiSuggestion.position}
+                        onAcceptSuggestion={(editor, monaco) =>
+                          aiSuggestion.acceptSuggestion(editor, monaco)
+                        }
+                        onRejectSuggestion={(editor) =>
+                          aiSuggestion.rejectSuggestion(editor)
+                        }
+                        onTriggerSuggestion={(type, editor) =>
+                          aiSuggestion.fetchSuggestion(type, editor)
+                        }
                       />
+
                     </ResizablePanel>
 
                     {isPreviewVisible && (
