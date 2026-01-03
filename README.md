@@ -7,7 +7,7 @@ Built with **Next.js**, powered by **WebContainers**, and enhanced by **AI-assis
 
 ---
 
-<img width="1024" height="1024" alt="ChatGPT Image Nov 2, 2025, 03_47_51 PM" src="https://github.com/user-attachments/assets/4e7791f7-8971-4add-baa0-8975ffae0ea3" />
+<img width="300" height="300" alt="ChatGPT Image Nov 2, 2025, 03_47_51 PM" src="https://github.com/user-attachments/assets/4e7791f7-8971-4add-baa0-8975ffae0ea3" />
 
 
 </div>
