@@ -198,8 +198,8 @@ The **Xynraco Editor** isn't just an IDE. It's a complete developer workspace th
 ## 🧭 Roadmap
 
 - [x] **Phase 1–2** – Project Setup & Core UI  
-- [ ] **Phase 3–4** – Editor & WebContainer Integration (Current)  
-- [ ] **Phase 5–6** – AI Integration & Terminal Refinement  
+- [x] **Phase 3–4** – Editor & WebContainer Integration (Current)  
+- [x] **Phase 5–6** – AI Integration & Terminal Refinement  
 - [ ] **Phase 7–8** – Templates, Persistence & Plugin System  
 - [ ] **Phase 9–14** – Cloud Sync, Collaboration & UX Polish  
 
@@ -247,13 +247,7 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-## 📄 License
-
-This project is open source and available under the MIT License.
-
----
-
-## 💜 Made with Love and Code
+## 💜 Made with Love Abdhullah Ariff 
 
 **By [Abdullah Ariff](https://github.com/abdhullah200)**
 
