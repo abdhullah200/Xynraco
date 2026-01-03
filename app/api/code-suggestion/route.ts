@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
- //Analyze the code context around the cursor position
+//Analyze the code context around the cursor position
 function analyzeCodeContext(content: string, line: number, column: number, fileName?: string): CodeContext {
   const lines = content.split("\n")
   const currentLine = lines[line] || ""
@@ -94,7 +94,7 @@ function analyzeCodeContext(content: string, line: number, column: number, fileN
 }
 
 
- //Build AI prompt based on context
+//Build AI prompt based on context
 function buildPrompt(context: CodeContext, suggestionType: string): string {
   return `You are an expert code completion assistant. Generate a ${suggestionType} suggestion.
 
@@ -121,7 +121,7 @@ Instructions:
 Generate suggestion:`
 }
 
- //Generate suggestion using AI service
+//Generate suggestion using AI service
 async function generateSuggestion(prompt: string): Promise<string> {
   try {
     // Replace this with your actual AI service call
