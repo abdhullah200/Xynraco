@@ -720,7 +720,7 @@ export const FileAttachmentChat: React.FC<FileAttachmentChatProps> = ({ isOpen, 
                   }
                 }}
                 disabled={isLoading}
-                className="min-h-[44px] max-h-32 bg-zinc-800/50 border-zinc-700/50 text-zinc-100 placeholder-zinc-500 focus:border-blue-500 focus:ring-blue-500/20 resize-none"
+                className="max-h-32 bg-zinc-800/50 border-zinc-700/50 text-zinc-100 placeholder-zinc-500 focus:border-blue-500 focus:ring-blue-500/20 resize-none"
                 rows={1}
               />
               <div className="absolute right-3 bottom-3 flex items-center gap-2">

@@ -5,7 +5,7 @@ import { TemplateFolder } from '@/features/playground/lib/path-to-json';
 import { transformToWebContainerFormat } from "../hooks/transformer";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import TerminalComponent from "./terminal";
+import TerminalComponent from "./terminal-wrapper";
 import { WebContainer } from "@webcontainer/api";
 
 interface WebContainerPreviewProps {

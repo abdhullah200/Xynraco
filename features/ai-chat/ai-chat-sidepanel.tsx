@@ -1149,22 +1149,27 @@ export const AIChatSidePanel: React.FC<AIChatSidePanelProps> = ({
                             code: ({
                               children,
                               className,
-                              inline: _inline,
-                            }) => (
-                              <EnhancedCodeBlock
-                                className={className}
-                                inline={_inline as boolean}
-                                onInsert={
-                                  onInsertCode
-                                    ? (code) => handleInsertCode(code)
-                                    : undefined
-                                }
-                                onRun={onRunCode}
-                                theme={theme}
-                              >
-                                {String(children)}
-                              </EnhancedCodeBlock>
-                            ),
+                              ...props
+                            }) => {
+                              // Check if it's inline code by looking for language class
+                              // Fenced code blocks have className like "language-js"
+                              const isInline = !className?.startsWith("language-");
+                              return (
+                                <EnhancedCodeBlock
+                                  className={className}
+                                  inline={isInline}
+                                  onInsert={
+                                    onInsertCode
+                                      ? (code) => handleInsertCode(code)
+                                      : undefined
+                                  }
+                                  onRun={onRunCode}
+                                  theme={theme}
+                                >
+                                  {String(children)}
+                                </EnhancedCodeBlock>
+                              );
+                            },
                           }}
                         >
                           {msg.content}

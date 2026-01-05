@@ -407,7 +407,7 @@ export const EnhancedCodeBlock: React.FC<EnhancedCodeBlockProps> = ({
           </SyntaxHighlighter>
 
           {collapsed && lineCount > 20 && (
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#1e1e1e] to-transparent flex items-end justify-center pb-2">
+            <div className="absolute bottom-0 left-0 right-0 h-12 from-[#1e1e1e] to-transparent flex items-end justify-center pb-2">
               <Button
                 variant="ghost"
                 size="sm"
