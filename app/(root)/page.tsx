@@ -11,7 +11,7 @@ export default function Home() {
       <div className="flex flex-col justify-center items-center my-5">
       <Image src={"/hero.svg"} alt="Hero-Section" height={500}  width={500}/>
 
-      <h1 className=" z-20 text-6xl mt-5 font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#05cdff] via-[#05cdff] to-[#6746d4] dark:from-[#05cdff] dark:via-[#3f5be4] dark:to-[#6746d4] tracking-tight leading-[1.3] ">
+      <h1 className=" z-20 text-6xl mt-5 font-extrabold text-center bg-clip-text text-transparent from-[#05cdff] via-[#05cdff] to-[#6746d4] dark:from-[#05cdff] dark:via-[#3f5be4] dark:to-[#6746d4] tracking-tight leading-[1.3] ">
         Xynraco With AI Assistance
       </h1>
       </div>
