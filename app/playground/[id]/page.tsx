@@ -180,10 +180,10 @@ const Page = ()=>{
         const updatedTemplateData = JSON.parse(
           JSON.stringify(latestTemplateData)
         );
-        const updateFileContent = (items: any[]) =>
+        const updateFileContentRecursive = (items: any[]): any[] =>
           items.map((item) => {
             if ("folderName" in item) {
-              return { ...item, items: updateFileContent(item.items) };
+              return { ...item, items: updateFileContentRecursive(item.items) };
             } else if (
               item.filename === fileToSave.filename &&
               item.fileExtension === fileToSave.fileExtension
@@ -192,7 +192,7 @@ const Page = ()=>{
             }
             return item;
           });
-        updatedTemplateData.items = updateFileContent(
+        updatedTemplateData.items = updateFileContentRecursive(
           updatedTemplateData.items
         );
 
@@ -206,8 +206,8 @@ const Page = ()=>{
         }
 
         // Use saveTemplateData to persist changes
-        const newTemplateData = await saveTemplateData(updatedTemplateData);
-        setTemplateData(newTemplateData || updatedTemplateData);
+        await saveTemplateData(updatedTemplateData);
+        setTemplateData(updatedTemplateData);
 
         // Update open files
         const updatedOpenFiles = openFiles.map((f) =>

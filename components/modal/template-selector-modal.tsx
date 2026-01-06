@@ -263,7 +263,7 @@ const TemplateSelectionModal = ({
         }
       }}
     >
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className=" max-h-[90vh] overflow-y-auto">
         {step === "select" ? (
           <>
             <DialogHeader>
@@ -296,7 +296,7 @@ const TemplateSelectionModal = ({
                   className="w-full sm:w-auto"
                   onValueChange={(value) => setCategory(value as "all" | "frontend" | "backend" | "fullstack")}
                 >
-                  <TabsList className="grid grid-cols-4 w-full sm:w-[400px]">
+                  <TabsList className="grid grid-cols-4 w-full sm:w-auto">
                     <TabsTrigger value="all">All</TabsTrigger>
                     <TabsTrigger value="frontend">Frontend</TabsTrigger>
                     <TabsTrigger value="backend">Backend</TabsTrigger>
@@ -335,7 +335,7 @@ const TemplateSelectionModal = ({
 
                         <div className="flex gap-4">
                           <div
-                            className="relative w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full"
+                            className="relative w-16 h-16 shrink-0 flex items-center justify-center rounded-full"
                             style={{ backgroundColor: `${template.color}15` }}
                           >
                             <Image
