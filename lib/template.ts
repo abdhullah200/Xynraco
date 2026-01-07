@@ -3,6 +3,8 @@ export const templatePaths ={
     NEXTJS: "vibracode-starters/nextjs",
     EXPRESS: "vibracode-starters/express-simple",
     VUE: "vibracode-starters/vue",
-    HONO:"vibracode-starters/hono-nodejs-starter",
-    ANGULAR:"vibracode-starters/angular"
-};
+    HONO: "vibracode-starters/hono-nodejs-starter",
+    ANGULAR: "vibracode-starters/angular",
+    FLASK: "vibracode-starters/static",
+    DOTNET: "vibracode-starters/static"
+} as const;

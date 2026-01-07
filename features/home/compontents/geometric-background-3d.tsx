@@ -122,7 +122,7 @@ function GeometricBackgroundScene() {
 
 export function GeometricBackground3D({ className }: { className?: string }) {
   return (
-    <div className={`absolute inset-0 w-full h-full pointer-events-none -z-0 ${className || ""}`}>
+    <div className={`absolute inset-0 w-full h-full pointer-events-none z-0 ${className || ""}`}>
       <Canvas
         style={{ background: "transparent" }}
         dpr={[1, 1.5]}
