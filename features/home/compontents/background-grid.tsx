@@ -46,9 +46,9 @@ export function BackgroundGrid() {
           background: "radial-gradient(circle at center, rgba(5,205,255,0.5) 0%, rgba(103,70,212,0.25) 55%, transparent 100%)",
         }}
       />
-      <div className="absolute -top-24 left-1/2 h-[420px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,#05cdff_0%,transparent_65%)] blur-3xl" />
-      <div className="absolute bottom-[-160px] right-[-80px] h-[380px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,#6746d4_0%,transparent_70%)] blur-3xl" />
-      <div className="absolute top-1/3 left-1/4 h-[280px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,#3f5be4_0%,transparent_60%)] blur-2xl opacity-80 mix-blend-screen dark:mix-blend-soft-light" />
+      <div className="absolute -top-24 left-1/2 h-105 w-130 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,#05cdff_0%,transparent_65%)] blur-3xl" />
+      <div className="absolute -bottom-40 -right-20 h-95 w-105 rounded-full bg-[radial-gradient(circle_at_center,#6746d4_0%,transparent_70%)] blur-3xl" />
+      <div className="absolute top-1/3 left-1/4 h-70 w-90 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,#3f5be4_0%,transparent_60%)] blur-2xl opacity-80 mix-blend-screen dark:mix-blend-soft-light" />
     </div>
   );
 }
