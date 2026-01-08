@@ -112,6 +112,27 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
           terminalRef.current.writeToTerminal("🔄 Transforming template data...\r\n");
         }
 
+        // Debug: Check template data
+        const packageJsonItem = templateData.items.find(
+          (item: any) => 'filename' in item && item.filename === 'package' && item.fileExtension === 'json'
+        );
+        
+        if (packageJsonItem && terminalRef.current?.writeToTerminal) {
+          const content = (packageJsonItem as any).content || '';
+          terminalRef.current.writeToTerminal(`📦 package.json size: ${content.length} bytes\r\n`);
+          
+          // Try to parse it
+          try {
+            JSON.parse(content);
+            terminalRef.current.writeToTerminal(`✅ package.json is valid JSON\r\n`);
+          } catch (e) {
+            terminalRef.current.writeToTerminal(`❌ package.json is INVALID: ${e}\r\n`);
+            // Show first and last 100 chars
+            terminalRef.current.writeToTerminal(`First 100: ${content.substring(0, 100)}\r\n`);
+            terminalRef.current.writeToTerminal(`Last 100: ${content.substring(content.length - 100)}\r\n`);
+          }
+        }
+
         // @ts-ignore
         const files = transformToWebContainerFormat(templateData);
 
@@ -122,15 +143,50 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
         }));
         setCurrentStep(2);
 
-        // Step 2: Mount files
+        // Step 2: Mount files using fs.writeFile instead of mount() to avoid corruption
         if (terminalRef.current?.writeToTerminal) {
-          terminalRef.current.writeToTerminal("📁 Mounting files to WebContainer...\r\n");
+          terminalRef.current.writeToTerminal("📁 Writing files to WebContainer...\r\n");
         }
         
-        await instance.mount(files);
+        // Recursively write files
+        async function writeFilesRecursively(tree: any, basePath: string = '') {
+          if (!instance) return;
+          
+          for (const [name, value] of Object.entries(tree)) {
+            const fullPath = basePath ? `${basePath}/${name}` : name;
+            
+            if ((value as any).directory) {
+              // Create directory
+              await instance.fs.mkdir(fullPath, { recursive: true });
+              // Recursively write contents
+              await writeFilesRecursively((value as any).directory, fullPath);
+            } else if ((value as any).file) {
+              // Write file
+              const content = (value as any).file.contents;
+              await instance.fs.writeFile(fullPath, content);
+            }
+          }
+        }
+        
+        await writeFilesRecursively(files);
+        
+        // Wait a moment for filesystem to stabilize
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         if (terminalRef.current?.writeToTerminal) {
-          terminalRef.current.writeToTerminal("✅ Files mounted successfully\r\n");
+          terminalRef.current.writeToTerminal("✅ Files written successfully\r\n");
+          
+          // Verify package.json was written correctly
+          try {
+            const packageJson = await instance.fs.readFile('package.json', 'utf-8');
+            terminalRef.current.writeToTerminal(`📄 package.json size: ${packageJson.length} bytes\r\n`);
+            
+            // Validate it's still valid JSON
+            JSON.parse(packageJson);
+            terminalRef.current.writeToTerminal(`✅ package.json is valid JSON\r\n`);
+          } catch (e) {
+            terminalRef.current.writeToTerminal(`⚠️ package.json verification failed: ${e}\r\n`);
+          }
         }
 
         setLoadingState((prev) => ({
@@ -140,18 +196,65 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
         }));
         setCurrentStep(3);
 
-        // Step 3: Install dependencies
+        // Step 3: Clean up any existing npm files that might be corrupted
         if (terminalRef.current?.writeToTerminal) {
-          terminalRef.current.writeToTerminal("📦 Installing dependencies...\r\n");
+          terminalRef.current.writeToTerminal("🧹 Cleaning up existing npm files...\r\n");
         }
         
-        const installProcess = await instance.spawn("npm", ["install"]);
+        try {
+          // Remove package-lock.json if it exists
+          try {
+            await instance.fs.rm('package-lock.json');
+            if (terminalRef.current?.writeToTerminal) {
+              terminalRef.current.writeToTerminal("✅ Removed package-lock.json\r\n");
+            }
+          } catch (e) {
+            // File doesn't exist, that's fine
+          }
+          
+          // Remove node_modules if it exists
+          try {
+            await instance.fs.rm('node_modules', { recursive: true, force: true });
+            if (terminalRef.current?.writeToTerminal) {
+              terminalRef.current.writeToTerminal("✅ Removed node_modules\r\n");
+            }
+          } catch (e) {
+            // Folder doesn't exist, that's fine
+          }
+        } catch (e) {
+          console.log('Cleanup error:', e);
+        }
 
-        // Stream install output to terminal
+        // Step 3: Install dependencies
+        if (terminalRef.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal("📦 Installing dependencies with yarn...\r\n");
+        }
+        
+        const installProcess = await instance.spawn("yarn", ["install"]);
+
+        // Stream install output to terminal with filtering
         installProcess.output.pipeTo(
           new WritableStream({
             write(data) {
-              // Write directly to terminal
+              // Filter out verbose warnings about deprecated packages
+              if (data.includes('warning') && (
+                data.includes('deprecated') ||
+                data.includes('no longer') ||
+                data.includes('This proposal') ||
+                data.includes('rimraf') ||
+                data.includes('workbox') ||
+                data.includes('eslint') ||
+                data.includes('svgo')
+              )) {
+                return; // Skip these verbose warnings
+              }
+              
+              // Filter out info messages about retrying
+              if (data.includes('info') && data.includes('trouble with your network')) {
+                return;
+              }
+              
+              // Show important messages
               if (terminalRef.current?.writeToTerminal) {
                 terminalRef.current.writeToTerminal(data);
               }
@@ -162,7 +265,9 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
         const installExitCode = await installProcess.exit;
 
         if (installExitCode !== 0) {
-          throw new Error(`Failed to install dependencies. Exit code: ${installExitCode}`);
+          if (terminalRef.current?.writeToTerminal) {
+            terminalRef.current.writeToTerminal("⚠️ Dependency installation had issues, continuing anyway...\r\n");
+          }
         }
 
         if (terminalRef.current?.writeToTerminal) {
@@ -181,7 +286,29 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
           terminalRef.current.writeToTerminal("🚀 Starting development server...\r\n");
         }
         
-        const startProcess = await instance.spawn("npm", ["run", "start"]);
+        // Check package.json to determine which script to run
+        let startCommand = ["start"];
+        let useYarn = true;
+        try {
+          const packageJson = await instance.fs.readFile('package.json', 'utf-8');
+          const pkg = JSON.parse(packageJson);
+          if (pkg.scripts?.dev) {
+            startCommand = ["dev"];
+          } else if (pkg.scripts?.start) {
+            startCommand = ["start"];
+          }
+        } catch (e) {
+          console.log('Could not read package.json, using default start command');
+        }
+        
+        // Set PORT environment variable to avoid conflicts and auto-accept prompts
+        const startProcess = await instance.spawn("yarn", startCommand, {
+          env: {
+            ...process.env,
+            PORT: '3001',
+            CI: 'true'
+          }
+        });
 
         // Listen for server ready event
         instance.on("server-ready", (port: number, url: string) => {
@@ -199,10 +326,15 @@ const WebContainerPreview: React.FC<WebContainerPreviewProps> = ({
           setIsSetupInProgress(false);
         });
 
-        // Handle start process output - stream to terminal
+        // Handle start process output - stream to terminal with filtering
         startProcess.output.pipeTo(
           new WritableStream({
             write(data) {
+              // Filter out verbose webpack/babel warnings
+              if (data.includes('warning') || data.includes('deprecated')) {
+                return;
+              }
+              
               if (terminalRef.current?.writeToTerminal) {
                 terminalRef.current.writeToTerminal(data);
               }

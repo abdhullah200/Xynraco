@@ -37,10 +37,23 @@ export function transformToWebContainerFormat(template: { folderName: string; it
         directory: directoryContents
       };
     } else {
-      // This is a file
+      // This is a file - ensure content is a valid string
+      let fileContent = item.content || '';
+      
+      // Validate that content is actually a string
+      if (typeof fileContent !== 'string') {
+        console.warn(`Invalid content for ${item.filename}, converting to string`);
+        fileContent = String(fileContent);
+      }
+      
+      // Check for potential issues with large files
+      if (fileContent.length > 5000000) {
+        console.warn(`Very large file: ${item.filename} (${fileContent.length} bytes)`);
+      }
+      
       return {
         file: {
-          contents: item.content
+          contents: fileContent
         }
       };
     }
