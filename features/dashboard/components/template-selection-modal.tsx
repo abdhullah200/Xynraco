@@ -33,7 +33,7 @@ type TemplateSelectionModalProps = {
   onClose: () => void;
   onSubmit: (data: {
     title: string;
-    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR" | "FLASK" | "DOTNET";
+    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
     description?: string;
   }) => void;
 };
@@ -133,30 +133,6 @@ const templates: TemplateOption[] = [
     ],
     category: "fullstack",
   },
-  {
-    id: "flask",
-    name: "Flask",
-    description:
-        "A lightweight WSGI web application framework in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.",
-    icon: "/flask-icon.svg",
-    color: "#000000",
-    popularity: 4,
-    tags: ["Python", "Backend", "WSGI"],
-    features: ["Lightweight", "Flexible", "Easy to Learn"],
-    category: "backend",
-  },
-  {
-    id:"dotnet",
-    name: ".NET",
-    description:
-        "A free, cross-platform, open source developer platform for building many different types of applications.",
-    icon: "/dotnet-icon.svg",
-    color: "#512BD4",
-    popularity: 4,
-    tags: [".NET", "C#", "Backend"],
-    features: ["Cross-Platform", "High Performance", "Rich Libraries"],
-    category: "backend",
-  }
 ];
 
 const TemplateSelectionModal = ({
@@ -200,7 +176,7 @@ const TemplateSelectionModal = ({
     if (selectedTemplate) {
       const templateMap: Record<
         string,
-        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR" | "FLASK" | "DOTNET"
+        "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"
       > = {
         react: "REACT",
         nextjs: "NEXTJS",
@@ -208,8 +184,6 @@ const TemplateSelectionModal = ({
         vue: "VUE",
         hono: "HONO",
         angular: "ANGULAR",
-        flask: "FLASK",
-        dotnet: "DOTNET",
       };
 
       const template = templates.find((t) => t.id === selectedTemplate);

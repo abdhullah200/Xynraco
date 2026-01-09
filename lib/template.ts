@@ -4,7 +4,5 @@ export const templatePaths ={
     EXPRESS: "vibracode-starters/express-simple",
     VUE: "vibracode-starters/vue",
     HONO: "vibracode-starters/hono-nodejs-starter",
-    ANGULAR: "vibracode-starters/angular",
-    FLASK: "vibracode-starters/static",
-    DOTNET: "vibracode-starters/static"
+    ANGULAR: "vibracode-starters/angular"
 } as const;

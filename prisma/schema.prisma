@@ -57,8 +57,6 @@ enum Templates {
   VUE
   HONO
   ANGULAR
-  FLASK
-  DOTNET
 }
 
 model Playground {
