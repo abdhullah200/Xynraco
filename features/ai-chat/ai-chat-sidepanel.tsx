@@ -776,6 +776,8 @@ export const AIChatSidePanel: React.FC<AIChatSidePanelProps> = ({
           },
         ]);
       } else {
+        const err = await response.json().catch(() => ({}));
+        console.error("chat failed:", response.status, err.details || err);
         setMessages((prev) => [
           ...prev,
           {
